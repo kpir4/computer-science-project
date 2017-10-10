@@ -32,6 +32,15 @@ class DatabaseUtility:
     def get_columns(self, table_name):
         return self.run_command("SHOW COLUMNS FROM %s;" % table_name)
 
+    def get_eid(self):
+        return self.run_command("SELECT eid, firstName, lastName FROM employeelist;")
+
+    def get_communication(self):
+        return self.run_command("SELECT a.eid, b.eid "
+                                "FROM employeelist a, employeelist b, communication c "
+                                "WHERE a.Email_id = c.sender AND "
+                                "b.Email_id = c.rvalue;")
+
     def run_command(self, cmd):
         print("RUNNING COMMAND: " + cmd)
         try:
@@ -55,4 +64,4 @@ class DatabaseUtility:
 
 if __name__ == '__main__':
     dbu = DatabaseUtility()
-    print(str(dbu.get_table_names()))
+    print(str(dbu.get_eid()))
