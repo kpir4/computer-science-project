@@ -8,13 +8,13 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import pyqtSlot
-import db_manager, sys
+import db_manager, sys, network
 
 class Ui_window(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.dbu = db_manager.DatabaseUtility()
+        self.graph = network.SocialNetwork()
 
     def setupUi(self, window):
         window.setObjectName("window")
@@ -54,12 +54,13 @@ class Ui_window(QtWidgets.QMainWindow):
         self.verticalLayout_2.addWidget(self.table_list)
         self.load_db_btn = QtWidgets.QPushButton(self.centralwidget)
         self.load_db_btn.setObjectName("load_db_btn")
-        self.load_db_btn.clicked.connect(self.on_click)
+        self.load_db_btn.clicked.connect(self.load_table)
         self.verticalLayout_2.addWidget(self.load_db_btn)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
         self.show_graph = QtWidgets.QPushButton(self.centralwidget)
         self.show_graph.setObjectName("show_graph")
+        self.show_graph.clicked.connect(self.load_graph)
         self.verticalLayout_2.addWidget(self.show_graph)
         self.actors_btn = QtWidgets.QPushButton(self.centralwidget)
         self.actors_btn.setObjectName("actors_btn")
@@ -127,9 +128,10 @@ class Ui_window(QtWidgets.QMainWindow):
         table = self.table_list.currentItem().text()
         self.update_tree(table)
 
-    @pyqtSlot()
-    def on_click(self):
-        self.load_table()
+    def load_graph(self):
+        self.graph.find_connections()
+        self.graph.construct_graph()
+        self.graph.draw_graph()
 
 
 if __name__ == "__main__":
