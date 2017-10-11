@@ -12,7 +12,7 @@ class SocialNetwork:
     def find_connections(self):
         connections = self.dbu.get_communication()
         for i in range(len(connections)):
-            # print(str(connections[i][0]) + ',' + str(connections[i][1]))
+            # get_communication() retreives the eid which start from 1 in MySQL
             self.comm_matrix[connections[i][0] - 1][connections[i][1] - 1] = 1
 
     def find_node_label(self, node1, node2):
@@ -33,3 +33,5 @@ class SocialNetwork:
         d = [(d[node] + 1) * 20 for node in self.g.nodes()]
         nx.draw(self.g, with_labels=True, edge_color = 'b', node_size = d)
         plt.show()
+        print(str(nx.closeness_centrality(self.g)))
+
