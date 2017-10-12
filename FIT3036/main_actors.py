@@ -94,12 +94,12 @@ class EnronGraph:
 
 if __name__ == '__main__':
     c = EnronGraph()
-    c.construct_adjacency_table()
-    c.closeness()
-    sort = sorted(c.metric_closeness)
-    for i, v in enumerate(sort):
-        label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
-        print(label, v)
+    # c.construct_adjacency_table()
+    # c.closeness()
+    # sort = sorted(c.metric_closeness)
+    # for i, v in enumerate(sort):
+    #     label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
+    #     print(label, v)
 
     # test = EnronGraph()
     # test.adj_table = [[1,2,5],[0,2,4],[0,1,3,4,5],[2,4,5],[1,2,3],[0,2,3]]
