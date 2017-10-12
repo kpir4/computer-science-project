@@ -34,19 +34,33 @@ class EnronGraph:
                 self.metric_closeness[node] = (0, node)
 
     def betweenness(self):
+        graph = [set() for _ in range(len(self.adj_table))]
+
+        for i in range(len(self.adj_table)):
+            for j in range(len(self.adj_table[i])):
+                graph[i].add(self.adj_table[i][j])
+
         self.metric_betweennness = [0] * len(self.adj_table)
 
-        for node in range(len(self.adj_table)):
-            pred = self.bfs(self.adj_table, node)
+        for i in range(len(self.adj_table)):
+            for j in range(len(self.adj_table)):
+                if i != j:
+                    paths = self.bfs_paths(graph, i, j)
 
-            for edge in range(len(self.adj_table)):
+                    counter = [0] * len(self.adj_table)
+                    for row in paths:
+                        for k in range(len(self.adj_table)):
+                            if k != i and k != j and k in row:
+                                counter[k] += 1
 
-                for node_between in range(len(self.adj_table)):
-                    if self.is_between(pred, edge, node_between):
-                        self.metric_betweennness[node_between] += 1
+                    for node in range(len(self.adj_table)):
+                        # Prevent division by zero
+                        if len(paths) > 0:
+                            self.metric_betweennness[node] += counter[node] / len(paths)
 
-        for node in range(len(self.metric_betweennness)):
-            self.metric_betweennness[node] = (2 * self.metric_betweennness[node]) / (self.count_nodes()-1) * (self.count_nodes()-2) * (len(self.adj_table) - self.count_nodes())
+        for i in range(len(self.metric_betweennness)):
+            # Normalise the betweenness centrality
+            self.metric_betweennness[i] = self.metric_betweennness[i] / ((self.count_nodes()-1) * (self.count_nodes()-2))
 
     def count_nodes(self):
         node_count = 0
@@ -83,53 +97,64 @@ class EnronGraph:
             v = pred[v]
         return len(path) - 1
 
-    def is_between(self, pred, s, t, b):
-        v = s
-        while pred[v] is not None:
-            if pred[v] != s and pred[v] != t:
-                if pred[v] == b:
-                    return True
-            v = pred[v]
-        return False
+    def dfs(self, pred, node, paths, curr_path):
+        curr_path.append(node)
+
+        # if path ends
+        if len(pred[node]) == 0:
+            paths.append(list(reversed(curr_path)))
+
+        for parent in pred[node]:
+            self.dfs(pred, parent, paths, curr_path)
+
+        # Backtrack
+        curr_path.pop()
+
+    def bfs_paths(self, graph, start, end):
+        if len(graph) == 0:
+            return []
+
+        queue = deque()
+        dist = [float('inf')] * len(graph)
+        pred = [set() for _ in range(len(graph))]
+        dist[start] = 0
+        queue.append(start)
+
+        ans = False
+        while len(queue) != 0:
+            current = queue.popleft()
+
+            for child in graph[current]:
+                if dist[child] == float('inf'):
+                    queue.append(child)
+                    dist[child] = dist[current] + 1
+                    pred[child].add(current)
+                elif dist[child] == dist[current] + 1:
+                    pred[child].add(current)
+
+                if child == end:
+                    ans = True
+
+        if ans:
+            all_paths = []
+            curr_path = []
+            self.dfs(pred, end, all_paths, curr_path)
+            return all_paths
+
+        return []
 
 if __name__ == '__main__':
     c = EnronGraph()
-    # c.construct_adjacency_table()
-    # c.closeness()
-    # sort = sorted(c.metric_closeness)
-    # for i, v in enumerate(sort):
-    #     label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
-    #     print(label, v)
+    c.construct_adjacency_table()
+    c.betweenness()
+    sort = sorted(c.metric_betweennness)
+    for i, v in enumerate(sort):
+        #label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
+        print(i, v)
 
     # test = EnronGraph()
     # test.adj_table = [[1,2,5],[0,2,4],[0,1,3,4,5],[2,4,5],[1,2,3],[0,2,3]]
-    # # close = [0] * len(test.adj_table)
-    # #
-    # # for node in range(len(test.adj_table)):
-    # #     shortest_path_sum = 0
-    # #     pred = test.bfs(test.adj_table, node)
-    # #
-    # #     for edge in range(len(test.adj_table)):
-    # #         shortest_path_sum += test.get_shortest_path(pred, edge)
-    # #     if shortest_path_sum > 0:
-    # #         #print("Shortest Path: " + str(shortest_path_sum))
-    # #         close[node] = (len(test.adj_table) - 1) / shortest_path_sum
-    #
-    # test.metric_betweennness = [0] * len(test.adj_table)
-    #
-    # for node in range(len(test.adj_table)):
-    #     pred = test.bfs(test.adj_table, node)
-    #
-    #     for edge in range(len(test.adj_table)):
-    #
-    #         for node_between in range(len(test.adj_table)):
-    #             if test.is_between(pred, edge, node, node_between):
-    #                 test.metric_betweennness[node_between] += 1
-    #
-    # for node in range(len(test.metric_betweennness)):
-    #     print(test.metric_betweennness[node])
-    #     test.metric_betweennness[node] = (test.metric_betweennness[node]) / ((test.count_nodes() - 1) * (
-    #     test.count_nodes() - 2))
+    # test.betweenness()
     #
     # for i, v in enumerate(test.metric_betweennness):
     #     print(i, v)
