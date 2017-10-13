@@ -60,7 +60,7 @@ class EnronGraph:
 
         for i in range(len(self.metric_betweennness)):
             # Normalise the betweenness centrality
-            self.metric_betweennness[i] = self.metric_betweennness[i] / ((self.count_nodes()-1) * (self.count_nodes()-2))
+            self.metric_betweennness[i] = (self.metric_betweennness[i] / ((self.count_nodes()-1) * (self.count_nodes()-2)), i)
 
     def count_nodes(self):
         node_count = 0
@@ -149,8 +149,8 @@ if __name__ == '__main__':
     c.betweenness()
     sort = sorted(c.metric_betweennness)
     for i, v in enumerate(sort):
-        #label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
-        print(i, v)
+        label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
+        print(label, v)
 
     # test = EnronGraph()
     # test.adj_table = [[1,2,5],[0,2,4],[0,1,3,4,5],[2,4,5],[1,2,3],[0,2,3]]

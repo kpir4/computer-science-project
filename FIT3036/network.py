@@ -41,7 +41,7 @@ class SocialNetwork:
         d = [(d[node] + 1) * 20 for node in self.g.nodes()]
         nx.draw(self.g, with_labels=True, edge_color = 'b', node_size = d)
         plt.show()
-        t = nx.betweenness_centrality(self.g)
+        t = nx.eigenvector_centrality(self.g, max_iter=0)
         s = [(k, t[k]) for k in sorted(t, key=t.get, reverse=True)]
         print(str(s))
 
@@ -52,6 +52,10 @@ if __name__ == '__main__':
             [0,0,0,0,1,0],
             [0,1,1,0,0,0],
             [0,0,0,1,0,0]]
+    # test = [[0,1,0,0],
+    #        [1,0,1,1],
+    #        [0,1,0,1],
+    #        [0,1,1,0]]
     t = nx.Graph()
 
     for i in range(len(test)):
@@ -59,4 +63,4 @@ if __name__ == '__main__':
             if test[i][j] == 1:
                 t.add_edge(i, j)
 
-    print(str(nx.betweenness_centrality(t, normalized=False)))
+    print(str(nx.eigenvector_centrality(t, max_iter=20)))
