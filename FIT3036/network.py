@@ -63,4 +63,4 @@ if __name__ == '__main__':
             if test[i][j] == 1:
                 t.add_edge(i, j)
 
-    print(str(nx.eigenvector_centrality(t, max_iter=20)))
+    print(str(nx.degree_centrality(t)))

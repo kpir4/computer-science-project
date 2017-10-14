@@ -1,6 +1,6 @@
 import math
 
-def eigen(p_matrix, a, epsilon):
+def eigenvector(p_matrix, a, epsilon):
     q = []
 
     q = p_matrix
@@ -58,7 +58,7 @@ if __name__ == '__main__':
          [1, 0, 1, 1, 0, 0]]
 
     p = [3, 3, 5, 3, 3, 3]
-    eigen = eigen(p, a, epsilon)
+    eigen = eigenvector(p, a, epsilon)
 
     print(str(eigen))
     # graph = [set() for _ in range(6)]
