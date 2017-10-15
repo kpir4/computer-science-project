@@ -36,7 +36,7 @@ class DatabaseUtility:
         return sorted(self.run_command("SELECT * FROM employeelist;"))
 
     def get_communication(self):
-        return self.run_command("SELECT * FROM contact;")
+        return self.run_command("SELECT * FROM communication;")
 
     def run_command(self, cmd):
         print("RUNNING COMMAND: " + cmd)

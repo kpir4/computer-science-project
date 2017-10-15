@@ -41,9 +41,6 @@ class SocialNetwork:
         d = [(d[node] + 1) * 20 for node in self.g.nodes()]
         nx.draw(self.g, with_labels=True, edge_color = 'b', node_size = d)
         plt.show()
-        t = nx.eigenvector_centrality(self.g, max_iter=0)
-        s = [(k, t[k]) for k in sorted(t, key=t.get, reverse=True)]
-        print(str(s))
 
 if __name__ == '__main__':
     test = [[0,1,1,0,0,1],
