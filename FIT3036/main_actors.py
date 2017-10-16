@@ -17,7 +17,7 @@ class EnronGraph:
         self.metric_degree = normalise(self.adj_table)
         self.metric_closeness = closeness(self.adj_table)
         self.metric_betweennness = betweenness(self.adj_table)
-        self.metric_eigenvector = eigenvector(degree(self.adj_table), self.adj_matrix,)
+        self.metric_eigenvector = eigenvector(degree(self.adj_table), self.adj_matrix, 0.000001)
 
     def construct_adjacency_table(self):
         for i in range(len(self.adj_matrix)):

@@ -41,6 +41,7 @@ class SocialNetwork:
         d = [(d[node] + 1) * 20 for node in self.g.nodes()]
         nx.draw(self.g, with_labels=True, edge_color = 'b', node_size = d)
         plt.show()
+        print(str(nx.betweenness_centrality(self.g)))
 
 if __name__ == '__main__':
     test = [[0,1,1,0,0,1],

@@ -1,7 +1,9 @@
 import math
+import db_manager
 
 def eigenvector(p_matrix, a, epsilon):
-    q = []
+    dbu = db_manager.DatabaseUtility()
+    employee_data = dbu.get_eid()
 
     q = p_matrix
     p = AxP(a, p_matrix)
@@ -13,6 +15,12 @@ def eigenvector(p_matrix, a, epsilon):
         p = AxP(a, p)
         l = norm(p)
         p = PxL(p, 1 / l)
+
+    for node in range(len(p)):
+        label = employee_data[node][1] + ' ' + employee_data[node][2]
+        p[node] = (label, p[node])
+
+    p.sort(key = lambda x: x[1], reverse = True)
 
     return p
 

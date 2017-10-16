@@ -1,3 +1,5 @@
+import db_manager
+
 def degree(adj_table):
     metric_degree = [0] * len(adj_table)
 
@@ -8,10 +10,16 @@ def degree(adj_table):
 
 
 def normalise(adj_table):
+    dbu = db_manager.DatabaseUtility()
+    employee_data = dbu.get_eid()
+
     metric_degree = degree(adj_table)
 
     for node in range(len(metric_degree)):
-        metric_degree[node] /= (count_nodes(adj_table) - 1)
+        label = employee_data[node][1] + ' ' + employee_data[node][2]
+        metric_degree[node] = (label, metric_degree[node] / (count_nodes(adj_table) - 1))
+
+    metric_degree.sort(key = lambda x: x[1], reverse = True)
 
     return metric_degree
 

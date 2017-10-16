@@ -1,6 +1,10 @@
 from queue import deque
+import db_manager
 
 def betweenness(adj_table):
+    dbu = db_manager.DatabaseUtility()
+    employee_data = dbu.get_eid()
+
     nnodes = len(adj_table)
     graph = [set() for _ in range(nnodes)]
 
@@ -25,6 +29,12 @@ def betweenness(adj_table):
                     # Prevent division by zero
                     if len(paths) > 0:
                         metric_betweennness[node] += counter[node] / len(paths)
+
+    for node in range(len(metric_betweennness)):
+        label = employee_data[node][1] + ' ' + employee_data[node][2]
+        metric_betweennness[node] = (label, metric_betweennness[node] / ((count_nodes(adj_table)-1) * (count_nodes(adj_table)-2)))
+
+    metric_betweennness.sort(key=lambda x: x[1], reverse=True)
 
     return metric_betweennness
 
@@ -73,3 +83,13 @@ def bfs_paths(graph, start, end):
         return all_paths
 
     return []
+
+
+def count_nodes(adj_table):
+    node_count = 0
+
+    for node in adj_table:
+        if len(node) > 0:
+            node_count += 1
+
+    return node_count
