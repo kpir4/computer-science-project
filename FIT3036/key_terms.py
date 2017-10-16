@@ -2,32 +2,35 @@ import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import Birch
 
-import db_manager
+import main_actors
 
 
 def extract_email():
-    dbu = db_manager.DatabaseUtility()
-    messages = dbu.get_communication()
+    actors = main_actors.EnronGraph()
+    messages = actors.net.connections
+    actors.find_top_actors(5)
 
     m_from = []
     m_to = []
-    m_subject = []
     m_body = []
+    m_mid = set()
 
     for i in messages:
-        m_from.append(i[0])
-        m_to.append(i[2])
-        m_subject.append(i[3])
-        m_body.append(i[4])
+        if i[4] not in m_mid:
+            if i[0] in actors.top_actors or i[1] in actors.top_actors:
+                m_from.append(i[0])
+                m_to.append(i[2])
+                m_body.append(i[3])
+                m_mid.add(i[4])
 
     return {'from': m_from,
             'to': m_to,
-            'subject': m_subject,
             'body': m_body}
 
 
-def top_feats_per_cluster(X, y, features, min_tfidf=0.1, top_n=25):
+def top_feats_per_cluster(X, y, features, min_tfidf, top_n):
     dfs = []
 
     labels = np.unique(y)
@@ -35,11 +38,12 @@ def top_feats_per_cluster(X, y, features, min_tfidf=0.1, top_n=25):
         ids = np.where(y == label)
         feats_df = top_mean_feats(X, features, ids, min_tfidf=min_tfidf, top_n=top_n)
         feats_df.label = label
+        feats_df = feats_df.values
         dfs.append(feats_df)
     return dfs
 
 
-def top_mean_feats(X, features, grp_ids=None, min_tfidf=0.1, top_n=25):
+def top_mean_feats(X, features, grp_ids, min_tfidf, top_n):
     if grp_ids:
         D = X[grp_ids].toarray()
     else:
@@ -57,33 +61,34 @@ def top_tfidf_feats(row, features, top_n=20):
     return df
 
 
-def find_key_terms():
+def find_key_terms(type):
     email_df = pd.DataFrame(extract_email())
-    vect = TfidfVectorizer(analyzer='word', stop_words='english', max_df=0.3, min_df=50)
+    vect = TfidfVectorizer(analyzer='word', stop_words='english', max_df=0.3, min_df=15)
 
     X = vect.fit_transform(email_df.body)
     features = vect.get_feature_names()
-    print(len(features))
 
     n_clusters = 5
-    clf = MiniBatchKMeans(n_clusters=n_clusters, init_size=1000, batch_size=500, max_iter=100)
+
+    if type == "kmeans":
+        try:
+            terms = np.load("kmeans.npy")
+            return terms
+        except:
+            clf = MiniBatchKMeans(n_clusters=n_clusters, init_size=1000, batch_size=500, max_iter=100)
+    else:
+        try:
+            terms = np.load("birch.npy")
+            return terms
+        except:
+            clf = Birch()
     labels = clf.fit_predict(X)
 
-    print(top_feats_per_cluster(X, labels, features, 0.1, 10))
+    terms = top_feats_per_cluster(X, labels, features, 0.1, 10)
+    np.save(type, terms)
 
-
-# def term_rank(row, features, limit=20):
-#     # Sort and remove rows beyond limit
-#     rows = np.argsort(row)[::-1][:limit]
-#     terms = [(features[i], row[i]) for i in rows]
-#     data_frame = pd.DataFrame(terms, columns=['Term', 'Score'])
-#     return data_frame
-#
-#
-# def key_email_term(X, features, row_id, top_n=25):
-#     row = np.squeeze(X[row_id].toarray())
-#     return top_tfidf_feats(row, features, top_n)
+    return terms
 
 
 if __name__ == '__main__':
-    find_key_terms()
+    print(find_key_terms("kmeans"))

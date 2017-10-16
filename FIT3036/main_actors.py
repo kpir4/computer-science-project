@@ -25,6 +25,21 @@ class EnronGraph:
                 if self.adj_matrix[i][j] > 0 and self.adj_matrix[j][i] > 0:
                     self.adj_table[i].append(j)
 
+    def find_top_actors(self, top_n):
+        self.top_actors = set()
+
+        for i in range(top_n):
+            self.top_actors.add(self.net.employee_data[self.metric_degree[i][2]][3])
+
+        for i in range(top_n):
+            self.top_actors.add(self.net.employee_data[self.metric_closeness[i][2]][3])
+
+        for i in range(top_n):
+            self.top_actors.add(self.net.employee_data[int(self.metric_betweennness[i][2])][3])
+
+        for i in range(top_n):
+            self.top_actors.add(self.net.employee_data[int(self.metric_eigenvector[i][2])][3])
+
 if __name__ == '__main__':
     c = EnronGraph()
     sort = sorted(c.metric_closeness)

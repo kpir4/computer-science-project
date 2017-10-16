@@ -16,10 +16,11 @@ def closeness(adj_table):
             shortest_path_sum += get_shortest_path(pred, edge)
 
         label = employee_data[node][1] + ' ' + employee_data[node][2]
+        # Prevent division by zero error
         if shortest_path_sum > 0:
-            metric_closeness[node] = (label, (count_nodes(adj_table) - 1) / shortest_path_sum)
+            metric_closeness[node] = (label, (count_nodes(adj_table) - 1) / shortest_path_sum, node)
         else:
-            metric_closeness[node] = (label, 0)
+            metric_closeness[node] = (label, 0, node)
 
     metric_closeness.sort(key = lambda x: x[1], reverse = True)
 

@@ -8,7 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import db_manager, sys, network
+import db_manager, sys, network, key_actor_UI, key_term_UI
 
 class Ui_window(QtWidgets.QMainWindow):
     def __init__(self):
@@ -54,20 +54,32 @@ class Ui_window(QtWidgets.QMainWindow):
         self.verticalLayout_2.addWidget(self.table_list)
         self.load_db_btn = QtWidgets.QPushButton(self.centralwidget)
         self.load_db_btn.setObjectName("load_db_btn")
+
+        # Load selected database
         self.load_db_btn.clicked.connect(self.load_table)
         self.verticalLayout_2.addWidget(self.load_db_btn)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
         self.show_graph = QtWidgets.QPushButton(self.centralwidget)
         self.show_graph.setObjectName("show_graph")
+
+        # Display network graph when clicked
         self.show_graph.clicked.connect(self.load_graph)
         self.verticalLayout_2.addWidget(self.show_graph)
         self.actors_btn = QtWidgets.QPushButton(self.centralwidget)
         self.actors_btn.setObjectName("actors_btn")
         self.verticalLayout_2.addWidget(self.actors_btn)
+
+        # Open metrics in UI
+        self.actors_btn.clicked.connect(self.show_metric)
+
         self.terms_btn = QtWidgets.QPushButton(self.centralwidget)
         self.terms_btn.setObjectName("terms_btn")
         self.verticalLayout_2.addWidget(self.terms_btn)
+
+        # Open clustering in UI
+        self.terms_btn.clicked.connect(self.show_key_terms)
+
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
         window.setCentralWidget(self.centralwidget)
@@ -132,6 +144,20 @@ class Ui_window(QtWidgets.QMainWindow):
         self.graph.find_connections()
         self.graph.construct_graph()
         self.graph.draw_graph()
+
+    def show_metric(self):
+        self.window = QtWidgets.QMainWindow()
+        self.actors = key_actor_UI.Ui_key_actor_window()
+        self.actors.setupUi(self.window)
+        self.actors.update_tree()
+        self.window.show()
+
+    def show_key_terms(self):
+        self.window = QtWidgets.QMainWindow()
+        self.term = key_term_UI.Ui_key_term_window()
+        self.term.setupUi(self.window)
+        self.term.update_tree()
+        self.window.show()
 
 
 if __name__ == "__main__":

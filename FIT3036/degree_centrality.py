@@ -17,7 +17,7 @@ def normalise(adj_table):
 
     for node in range(len(metric_degree)):
         label = employee_data[node][1] + ' ' + employee_data[node][2]
-        metric_degree[node] = (label, metric_degree[node] / (count_nodes(adj_table) - 1))
+        metric_degree[node] = (label, metric_degree[node] / (count_nodes(adj_table) - 1), node)
 
     metric_degree.sort(key = lambda x: x[1], reverse = True)
 

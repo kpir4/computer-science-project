@@ -1,28 +1,36 @@
 import math
+from numpy import save, load
 import db_manager
 
 def eigenvector(p_matrix, a, epsilon):
-    dbu = db_manager.DatabaseUtility()
-    employee_data = dbu.get_eid()
+    try:
+        p = load("eigenvector.npy")
+        return p
+    except:
+        print("here")
+        dbu = db_manager.DatabaseUtility()
+        employee_data = dbu.get_eid()
 
-    q = p_matrix
-    p = AxP(a, p_matrix)
-    l = norm(p)
-    p = PxL(p, 1/l)
-
-    while norm(PminusQ(p,q)) > epsilon:
-        q = p
-        p = AxP(a, p)
+        q = p_matrix
+        p = AxP(a, p_matrix)
         l = norm(p)
-        p = PxL(p, 1 / l)
+        p = PxL(p, 1/l)
 
-    for node in range(len(p)):
-        label = employee_data[node][1] + ' ' + employee_data[node][2]
-        p[node] = (label, p[node])
+        while norm(PminusQ(p,q)) > epsilon:
+            q = p
+            p = AxP(a, p)
+            l = norm(p)
+            p = PxL(p, 1 / l)
 
-    p.sort(key = lambda x: x[1], reverse = True)
+        for node in range(len(p)):
+            label = employee_data[node][1] + ' ' + employee_data[node][2]
+            p[node] = (label, p[node], node)
 
-    return p
+        p.sort(key = lambda x: x[1], reverse = True)
+
+        save("eigenvector", p)
+
+        return p
 
 def AxP(a, p):
     q = [None] * len(p)
