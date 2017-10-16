@@ -71,7 +71,7 @@ def find_key_terms(type):
             return terms
     except:
         email_df = pd.DataFrame(extract_email())
-        vect = TfidfVectorizer(analyzer='word', stop_words='english', max_df=0.3, min_df=15)
+        vect = TfidfVectorizer(analyzer='word', stop_words='english', max_df=0.4, min_df=15)
 
         X = vect.fit_transform(email_df.body)
         features = vect.get_feature_names()
