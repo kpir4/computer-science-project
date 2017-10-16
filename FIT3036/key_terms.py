@@ -54,7 +54,7 @@ def top_mean_feats(X, features, grp_ids, min_tfidf, top_n):
     return top_tfidf_feats(tfidf_means, features, top_n)
 
 
-def top_tfidf_feats(row, features, top_n=20):
+def top_tfidf_feats(row, features, top_n):
     topn_ids = np.argsort(row)[::-1][:top_n]
     top_feats = [(features[i], row[i]) for i in topn_ids]
     df = pd.DataFrame(top_feats, columns=['features', 'score'])
