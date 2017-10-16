@@ -62,32 +62,32 @@ def top_tfidf_feats(row, features, top_n=20):
 
 
 def find_key_terms(type):
-    email_df = pd.DataFrame(extract_email())
-    vect = TfidfVectorizer(analyzer='word', stop_words='english', max_df=0.3, min_df=15)
-
-    X = vect.fit_transform(email_df.body)
-    features = vect.get_feature_names()
-
-    n_clusters = 5
-
-    if type == "kmeans":
-        try:
+    try:
+        if type == "kmeans":
             terms = np.load("kmeans.npy")
             return terms
-        except:
-            clf = MiniBatchKMeans(n_clusters=n_clusters, init_size=1000, batch_size=500, max_iter=100)
-    else:
-        try:
+        else:
             terms = np.load("birch.npy")
             return terms
-        except:
+    except:
+        email_df = pd.DataFrame(extract_email())
+        vect = TfidfVectorizer(analyzer='word', stop_words='english', max_df=0.3, min_df=15)
+
+        X = vect.fit_transform(email_df.body)
+        features = vect.get_feature_names()
+
+        n_clusters = 5
+
+        if type == "kmeans":
+            clf = MiniBatchKMeans(n_clusters=n_clusters, init_size=1000, batch_size=500, max_iter=100)
+        else:
             clf = Birch()
-    labels = clf.fit_predict(X)
+        labels = clf.fit_predict(X)
 
-    terms = top_feats_per_cluster(X, labels, features, 0.1, 10)
-    np.save(type, terms)
+        terms = top_feats_per_cluster(X, labels, features, 0.1, 10)
+        np.save(type, terms)
 
-    return terms
+        return terms
 
 
 if __name__ == '__main__':

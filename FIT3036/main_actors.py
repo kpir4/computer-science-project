@@ -2,7 +2,7 @@ from queue import deque
 import network
 from betweenness_centrality import betweenness
 from closeness_centrality import closeness
-from degree_centrality import degree, normalise
+from degree_centrality import degree, normalise, weighted_degree
 from eigenvector_centrality import eigenvector
 
 class EnronGraph:
@@ -15,6 +15,7 @@ class EnronGraph:
         self.construct_adjacency_table()
 
         self.metric_degree = normalise(self.adj_table)
+        self.metric_weighted_degree = weighted_degree(self.adj_table, self.adj_matrix, 0.7)
         self.metric_closeness = closeness(self.adj_table)
         self.metric_betweennness = betweenness(self.adj_table)
         self.metric_eigenvector = eigenvector(degree(self.adj_table), self.adj_matrix, 0.000001)
@@ -30,6 +31,9 @@ class EnronGraph:
 
         for i in range(top_n):
             self.top_actors.add(self.net.employee_data[self.metric_degree[i][2]][3])
+
+        for i in range(top_n):
+            self.top_actors.add(self.net.employee_data[self.metric_weighted_degree[i][2]][3])
 
         for i in range(top_n):
             self.top_actors.add(self.net.employee_data[self.metric_closeness[i][2]][3])

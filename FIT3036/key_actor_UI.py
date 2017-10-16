@@ -29,7 +29,7 @@ class Ui_key_actor_window(QtWidgets.QMainWindow):
         self.verticalLayout.addWidget(self.metric_combo_box)
 
         # Add metric titles
-        metric_titles = ["Degree", "Closeness", "Betweenness", "Eigenvector"]
+        metric_titles = ["Degree", "Weighted Degree", "Closeness", "Betweenness", "Eigenvector"]
         self.metric_combo_box.addItems(metric_titles)
 
         self.metric_tree = QtWidgets.QTreeWidget(self.centralwidget)
@@ -68,6 +68,8 @@ class Ui_key_actor_window(QtWidgets.QMainWindow):
 
         if metric_name == "Degree":
             metric_set = self.actors.metric_degree
+        elif metric_name == "Weighted Degree":
+            metric_set = self.actors.metric_weighted_degree
         elif metric_name == "Closeness":
             metric_set = self.actors.metric_closeness
         elif metric_name == "Betweenness":
