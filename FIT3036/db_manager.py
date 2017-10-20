@@ -1,5 +1,4 @@
 import mysql.connector
-from mysql.connector import errorcode
 
 
 class DatabaseUtility:
@@ -51,14 +50,3 @@ class DatabaseUtility:
             msg = self.cursor.fetchone()
 
         return msg
-
-    # def __del__(self):
-    #     self.cnx.commit()
-    #     self.cursor.close()
-    #
-    #     self.cnx.close()
-
-
-if __name__ == '__main__':
-    dbu = DatabaseUtility()
-    print(str(dbu.get_eid()))

@@ -89,6 +89,3 @@ def find_key_terms(type):
 
         return terms
 
-
-if __name__ == '__main__':
-    print(find_key_terms("kmeans"))

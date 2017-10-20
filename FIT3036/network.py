@@ -42,22 +42,3 @@ class SocialNetwork:
         nx.draw(self.g, with_labels=True, edge_color = 'b', node_size = d)
         plt.show()
 
-if __name__ == '__main__':
-    test = [[0,1,1,0,0,1],
-            [0,0,1,0,1,0],
-            [0,0,0,1,0,1],
-            [0,0,0,0,1,0],
-            [0,1,1,0,0,0],
-            [0,0,0,1,0,0]]
-    # test = [[0,1,0,0],
-    #        [1,0,1,1],
-    #        [0,1,0,1],
-    #        [0,1,1,0]]
-    t = nx.Graph()
-
-    for i in range(len(test)):
-        for j in range(len(test[i])):
-            if test[i][j] == 1:
-                t.add_edge(i, j)
-
-    print(str(nx.degree_centrality(t)))

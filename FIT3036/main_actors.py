@@ -43,17 +43,3 @@ class EnronGraph:
 
         for i in range(top_n):
             self.top_actors.add(self.net.employee_data[int(self.metric_eigenvector[i][2])][3])
-
-if __name__ == '__main__':
-    c = EnronGraph()
-    sort = sorted(c.metric_closeness)
-    for i, v in enumerate(sort):
-        label = c.net.employee_data[sort[i][1]][1] + ' ' + c.net.employee_data[sort[i][1]][2]
-        print(label, v)
-
-    # test = EnronGraph()
-    # test.adj_table = [[1,2,5],[0,2,4],[0,1,3,4,5],[2,4,5],[1,2,3],[0,2,3]]
-    # test.betweenness()
-    #
-    # for i, v in enumerate(test.metric_betweennness):
-    #     print(i, v)

@@ -45,7 +45,7 @@ def weighted_degree(adj_table, adj_matrix, alpha):
         for j in range(len(adj_matrix)):
             weight += adj_matrix[i][j] + adj_matrix[j][i]
 
-        metric_weighted_degree[i] = degrees[i] ** (1-alpha) + weight ** alpha
+        metric_weighted_degree[i] = degrees[i] ** (1-alpha) * weight ** alpha
 
     for node in range(len(metric_weighted_degree)):
         label = employee_data[node][1] + ' ' + employee_data[node][2]
@@ -54,11 +54,3 @@ def weighted_degree(adj_table, adj_matrix, alpha):
     metric_weighted_degree.sort(key = lambda x: x[1], reverse=True)
 
     return metric_weighted_degree
-
-
-if __name__ == '__main__':
-    test = [[1,2,5],[0,2,4],[0,1,3,4,5],[2,4,5],[1,2,3],[0,2,3]]
-    result = degree(test)
-
-    for i in result:
-        print(str(i))
